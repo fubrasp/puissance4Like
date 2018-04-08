@@ -1,15 +1,12 @@
-# -*- coding: cp1252 -*-
+# -*- coding: utf-8 -*-
 
-
-#####################
-# Variables globales
-
-M = [[0, 0, 0, 0, 0, 0, 0], \
-     [0, 0, 0, 0, 0, 0, 0], \
-     [0, 0, 0, 0, 0, 0, 0], \
-     [0, 0, 0, 0, 0, 0, 0], \
-     [0, 0, 0, 0, 0, 0, 0], \
-     [0, 0, 0, 0, 0, 0, 0]]
+liste = [
+[0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0]]
 
 joueur = 1
 JetonsJoues = 0
@@ -34,7 +31,7 @@ def choisir_colonne(x, y):
     col = x - 16
     col = col / 97
     if col in range(0, 7):
-        if (M[5][col] == 0):
+        if (liste[5][col] == 0):
             test = False
     return int(col)
 
@@ -43,7 +40,7 @@ def ligne():
     # Cette fonction retourne la ligne vide correspondant a la colonne demandee
     lig = 0
     for i in range(1, 6):
-        if (M[i][colonne] == 0 and M[i - 1][colonne] != 0):
+        if (liste[i][colonne] == 0 and liste[i - 1][colonne] != 0):
             lig = i
     return int(lig)
 
@@ -54,8 +51,8 @@ def verification_P4():
     # test d'un P4 horizontal
     i = j = 0
     while (not (i == 5 and j == 3)):
-        if (M[i][j] == M[i][j + 1] and M[i][j] == M[i][j + 2] \
-                and M[i][j] == M[i][j + 3] and M[i][j] == joueur):
+        if (liste[i][j] == liste[i][j + 1] and liste[i][j] == liste[i][j + 2] \
+                and liste[i][j] == liste[i][j + 3] and liste[i][j] == joueur):
             test2 = True
         if (j == 3):
             i = i + 1
@@ -66,8 +63,8 @@ def verification_P4():
     # test d'un P4 vertical
     i = j = 0
     while (not (i == 2 and j == 6)):
-        if (M[i][j] == M[i + 1][j] and M[i][j] == M[i + 2][j] \
-                and M[i][j] == M[i + 3][j] and M[i][j] == joueur):
+        if (liste[i][j] == liste[i + 1][j] and liste[i][j] == liste[i + 2][j] \
+                and liste[i][j] == liste[i + 3][j] and liste[i][j] == joueur):
             test2 = True
         if (j == 6):
             i = i + 1
@@ -78,8 +75,8 @@ def verification_P4():
     # test d'un P4 diagonal vers la droite
     i = j = 0
     while (not (i == 2 and j == 3)):
-        if (M[i][j] == M[i + 1][j + 1] and M[i][j] == M[i + 2][j + 2] \
-                and M[i][j] == M[i + 3][j + 3] and M[i][j] == joueur):
+        if (liste[i][j] == liste[i + 1][j + 1] and liste[i][j] == liste[i + 2][j + 2] \
+                and liste[i][j] == liste[i + 3][j + 3] and liste[i][j] == joueur):
             test2 = True
         if (j == 3):
             i = i + 1
@@ -91,8 +88,8 @@ def verification_P4():
     i = 0
     j = 3
     while (not (i == 2 and j == 6)):
-        if (M[i][j] == M[i + 1][j - 1] and M[i][j] == M[i + 2][j - 2] \
-                and M[i][j] == M[i + 3][j - 3] and M[i][j] == joueur):
+        if (liste[i][j] == liste[i + 1][j - 1] and liste[i][j] == liste[i + 2][j - 2] \
+                and liste[i][j] == liste[i + 3][j - 3] and liste[i][j] == joueur):
             test2 = True
         if (j == 6):
             i = i + 1
@@ -144,10 +141,10 @@ while (not P4 and JetonsJoues < 42):
             joueur = quel_joueur()
             colonne = choisir_colonne(x, y)
             # On modifie les variables pour tenir compte du jeton depose.
-            M[ligne()][colonne] = joueur
+            liste[ligne()][colonne] = joueur
             JetonsJoues = JetonsJoues + 1
             P4 = verification_P4()
-            affichage(M)
+            affichage(liste)
             pygame.display.flip()
 
         if event.type == pygame.QUIT:
