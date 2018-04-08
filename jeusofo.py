@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+# Double liste symbolisant le plateau de jeu
 liste = [
 [0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0],
@@ -21,7 +22,7 @@ def quel_joueur():
     if (JetonsJoues % 2 == 0):
         jou = 1
     else:
-        jou = 2
+        jou = -1
     return jou
 
 
@@ -35,69 +36,120 @@ def choisir_colonne(x, y):
             test = False
     return int(col)
 
+def placer_pion(colonne):
+    # boucle sur les lignes de bas en haut
+    ligne=5 # par le bas 5 4 3 2 1 0
+    #  ATTENTION CECI est different de l'encodage des pions. peut on utiliser true or false
+    # False je continue, truej'arrete
+    stop=False
+    while ligne>=0 and stop==False:
+        # si j'ai une case vide pour la colonne concernee
+        if(liste[ligne][colonne]==0):
+            if joueur == 1:
+                # je mets mon pion jaune
+                liste[ligne][colonne] = 1
+                # vu que je viens de placer mon pion, je ne vais pas en placer d'autres.
+                stop = True
+            else:
+                liste[ligne][colonne] = -1
+                stop = True
+        # je remonte de bas en haut avec colonne fixee dans liste
+        ligne=ligne-1 # faire le parcours de bas en haut, parce que c'est plus performant (condition arret atteinte plus tot)
 
-def ligne():
-    # Cette fonction retourne la ligne vide correspondant a la colonne demandee
-    lig = 0
-    for i in range(1, 6):
-        if (liste[i][colonne] == 0 and liste[i - 1][colonne] != 0):
-            lig = i
-    return int(lig)
 
 
-def verification_P4():
-    test2 = False
+def gagnant_horizontal():
+    # initialisation des variables
+    # conserver le gagnant, vide si pas de gagnant
+    gagnant=""
+    # variable utilisee pour la boucle while
+    ligne=5
+    # variable qui sert a arret si on trouve le gagnant
+    stop=False
+    # raisonnement similaire, plus performant qu'un parcours traditionnel
+    # on boucle tant qu'on n'a pas atteint (la ligne) 0 et que l'on a pas de gagnant
+    # le while nous permet de nous deplacer dans les lignes de bas en haut (ligne 5 --> ligne 0)
+    while ligne >= 0 and stop==False:
+        for colonne in range (4): # ca nous permet deplacer dans les colonnes
+            # pourquoi 4 ? 4 possibilites de gagner dans une ligne
+            # on determine le gagnant en fonction des valeurs definies dans les 4 colonnes (que l'on decale grace a la variable colonne) que l'on regarde pour la ligne donnee i
+            if liste[ligne][colonne] + liste[ligne][colonne+1] + liste[ligne][colonne+2] + liste[ligne][colonne+3] == 4 :#joueur jaune gagne
+                # on affecte le gagnant (car on a nom nombre de points)
+                gagnant="jaune"
+                print(gagnant)
+                # vu qu'on a gagne on arrete les parcours
+                stop=True
+            if liste[ligne][colonne] + liste[ligne][colonne+1] + liste[ligne][colonne+2] + liste[ligne][colonne+3] == -4 :#joueur rouge gagne
+                gagnant="rouge"
+                print(gagnant)
+                stop=True
+        # on remonte la ligne
+        ligne=ligne-1
+    # retourne la variable gagnant
+    return gagnant
 
-    # test d'un P4 horizontal
-    i = j = 0
-    while (not (i == 5 and j == 3)):
-        if (liste[i][j] == liste[i][j + 1] and liste[i][j] == liste[i][j + 2] \
-                and liste[i][j] == liste[i][j + 3] and liste[i][j] == joueur):
-            test2 = True
-        if (j == 3):
-            i = i + 1
-            j = 0
-        else:
-            j = j + 1
+def gagnant_vertical():
+	gagnant=""
+# on regarde chaque colonne
+	for colonne in range (7):
+		# on descend les lignes pour la colonne concernee, pour verifier s'il y a un gagnant
+		# tant que la ligne est strictement superieur a 2
+		# 5 4 3 en baissant de -1 (3eme parametre du for)
+		# c'est plus concis que ce qu'on a au-dessous
+		for ligne in range(5, 2, -1):
+			if liste[ligne][colonne] + liste[ligne-1][colonne] + liste[ligne-2][colonne] + liste[ligne-3][colonne] ==4:
+				gagnant= "jaune"
+			if liste[ligne][colonne] + liste[ligne-1][colonne] + liste[ligne-2][colonne] + liste[ligne-3][colonne] ==-4:
+				gagnant= "rouge"
+	return gagnant
 
-    # test d'un P4 vertical
-    i = j = 0
-    while (not (i == 2 and j == 6)):
-        if (liste[i][j] == liste[i + 1][j] and liste[i][j] == liste[i + 2][j] \
-                and liste[i][j] == liste[i + 3][j] and liste[i][j] == joueur):
-            test2 = True
-        if (j == 6):
-            i = i + 1
-            j = 0
-        else:
-            j = j + 1
+def gagnant_diagonales():
+	gagnant=""
+	# on va diagonale d'en haut a gauche vers en bas a droite
+	# on avance dans les lignes
+	for ligne in range (3):
+		# on avance dans les colonnes
+		for colonne in range (4):
+			# vu que c'est en meme on avance en diagonale
+			if liste[ligne][colonne] + liste[ligne+1][colonne+1] + liste[ligne+2][colonne+2] + liste[ligne+3][colonne+3] == 4:
+				gagnant = "jaune"
+			if liste[ligne][colonne] + liste[ligne+1][colonne+1] + liste[ligne+2][colonne+2] + liste[ligne+3][colonne+3] == -4:
+				gagnant = "rouge"
+	# on va diagonale d'en haut a droite vers en bas a gauche
+	for ligne in range (3):
+		# 0 1 2 3, la ligne a laquelle on commence
+		for colonne in range (3,7):
+			# 3 4 5 6, on commence a la colonne 3 pour aller vers la 6
+			if liste[ligne][colonne] + liste[ligne+1][colonne-1] + liste[ligne+2][colonne-2] + liste[ligne+3][colonne-3] == 4:
+				gagnant = "jaune"
+			if liste[ligne][colonne] + liste[ligne+1][colonne-1] + liste[ligne+2][colonne-2] + liste[ligne+3][colonne-3] == -4:
+				gagnant = "rouge"
+	return gagnant
 
-    # test d'un P4 diagonal vers la droite
-    i = j = 0
-    while (not (i == 2 and j == 3)):
-        if (liste[i][j] == liste[i + 1][j + 1] and liste[i][j] == liste[i + 2][j + 2] \
-                and liste[i][j] == liste[i + 3][j + 3] and liste[i][j] == joueur):
-            test2 = True
-        if (j == 3):
-            i = i + 1
-            j = 0
-        else:
-            j = j + 1
+def determiner_gagnant():
+    # on verifie q'il gagnant d'abord horizontalement
+    joueur = gagnant_horizontal()
+    # s'il y a un gagnant, je n'ai pas besoin de verifier les autres cas
+    # s'il n'y pas de gagnant je vais pas sur le return donc je peux continuer les autres etapes de la verification
+    if (joueur != ""):
+        return joueur
+    joueur = gagnant_vertical()
+    if (joueur != ""):
+        return joueur
+    joueur = gagnant_diagonales()
+    if (joueur != ""):
+        return joueur
 
-    # test d'un P4 diagonal vers la gauche
-    i = 0
-    j = 3
-    while (not (i == 2 and j == 6)):
-        if (liste[i][j] == liste[i + 1][j - 1] and liste[i][j] == liste[i + 2][j - 2] \
-                and liste[i][j] == liste[i + 3][j - 3] and liste[i][j] == joueur):
-            test2 = True
-        if (j == 6):
-            i = i + 1
-            j = 3
-        else:
-            j = j + 1
+# inutile c'est pour tester
+def afficher_gagnant(joueur):
+	if joueur =="" or joueur is None:
+		return ("personne n'a gagne")
+	else:
+		return (joueur + " a gagne")
 
-    return test2
+# Affichage du resultat
+# j'affiche le retour de la methode afficger gagnant
+print(afficher_gagnant(determiner_gagnant()))
 
 
 # -*- coding: cp1252 -*-
@@ -113,16 +165,16 @@ screen.blit(image, (0, 0))
 pygame.display.flip()
 
 
-def affichage(matrice):
+def affichage():
     screen.fill((0, 0, 0))
     screen.blit(image, (0, 0))
-    for i in range(len(matrice)):
-        for j in range(len(matrice[i])):
-            if matrice[i][j] == 1:
-                screen.blit(pionrouge, (16 + 97 * j, 13 - 97.5 * i + 486))
-            pygame.display.flip()
-            if matrice[i][j] == 2:
+    for i in range(len(liste)):
+        for j in range(len(liste[i])):
+            if liste[i][j] == 1:
                 screen.blit(pionjaune, (16 + 97 * j, 13 - 97.5 * i + 486))
+            pygame.display.flip()
+            if liste[i][j] == -1:
+                screen.blit(pionrouge, (16 + 97 * j, 13 - 97.5 * i + 486))
             pygame.display.flip()
 
 
@@ -132,7 +184,7 @@ font = pygame.font.Font("freesansbold.ttf", 15)
 
 import time
 
-while (not P4 and JetonsJoues < 42):
+while (P4!="jaune" and P4!="rouge" and JetonsJoues < 42):
     time.sleep(0.1)
     # Le joueur joue
     for event in pygame.event.get():
@@ -141,10 +193,10 @@ while (not P4 and JetonsJoues < 42):
             joueur = quel_joueur()
             colonne = choisir_colonne(x, y)
             # On modifie les variables pour tenir compte du jeton depose.
-            liste[ligne()][colonne] = joueur
+            placer_pion(colonne)
             JetonsJoues = JetonsJoues + 1
-            P4 = verification_P4()
-            affichage(liste)
+            P4 = determiner_gagnant()
+            affichage()
             pygame.display.flip()
 
         if event.type == pygame.QUIT:
