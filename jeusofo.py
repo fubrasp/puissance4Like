@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+def print_liste(liste):
+    print("")
+    print("")
+    for i in range(len(liste)):
+        for j in range(len(liste[i])):
+            print(liste[i][j], end=' ')
+        print()
+    print("")
+    print("")
 
 # Double liste symbolisant le plateau de jeu
 liste = [
@@ -164,16 +173,27 @@ screen = pygame.display.set_mode(size)
 screen.blit(image, (0, 0))
 pygame.display.flip()
 
+def extract_lines(liste):
+    reversed_liste = []
+    for row in range(5,-1,-1):
+        reversed_liste.append(liste[row])
+    return reversed_liste
 
 def affichage():
     screen.fill((0, 0, 0))
     screen.blit(image, (0, 0))
-    for i in range(len(liste)):
-        for j in range(len(liste[i])):
-            if liste[i][j] == 1:
+
+    test = extract_lines(liste)
+
+    print("DIPLAY")
+    print_liste(test)
+
+    for i in range(len(test)):
+        for j in range(len(test[i])):
+            if test[i][j] == 1:
                 screen.blit(pionjaune, (16 + 97 * j, 13 - 97.5 * i + 486))
             pygame.display.flip()
-            if liste[i][j] == -1:
+            if test[i][j] == -1:
                 screen.blit(pionrouge, (16 + 97 * j, 13 - 97.5 * i + 486))
             pygame.display.flip()
 
@@ -188,6 +208,9 @@ while (P4!="jaune" and P4!="rouge" and JetonsJoues < 42):
     time.sleep(0.1)
     # Le joueur joue
     for event in pygame.event.get():
+
+        print_liste(liste)
+
         if event.type == pygame.MOUSEBUTTONUP:
             x, y = pygame.mouse.get_pos()
             joueur = quel_joueur()
