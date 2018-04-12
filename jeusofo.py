@@ -41,7 +41,7 @@ def choisir_colonne(x, y):
     col = x - 16
     col = col / 97
     if col in range(0, 7):
-        if (liste[5][col] == 0):
+        if (liste[5][int(col)] == 0):
             test = False
     return int(col)
 
