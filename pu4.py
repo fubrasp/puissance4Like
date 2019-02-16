@@ -3,21 +3,13 @@
 import time
 import pygame
 import sys
+import os
+from gameUtils import *
 
-
-def print_liste(liste):
-    print("")
-    print("")
-    for i in range(len(liste)):
-        for j in range(len(liste[i])):
-            print(liste[i][j], end=' ')
-        print()
-    print("")
-    print("")
-
+IMAGE_DIRECTORY = "images"
 # initialiser le backend du jeu
-# Double liste symbolisant le plateau de jeu
-liste = [
+# Double gameBoard symbolisant le plateau de jeu
+gameBoard = [
 [0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0],
@@ -33,7 +25,7 @@ gagnant_potentiel = False
 # utiliser la librairie pygame
 pygame.init()
 # charger l'image du plateau de jeu
-image = pygame.image.load("plateau.png")
+image = pygame.image.load(os.path.join(IMAGE_DIRECTORY, "plateau.png"))
 # obtenir la taille du plateau de jeu
 taille_plateau_de_jeu = image.get_size()
 # stocker cette taille
@@ -44,9 +36,9 @@ screen.blit(image, (0, 0))
 pygame.display.flip()
 
 # charger l'image du pion jaune
-pionjaune = pygame.image.load("pion_jaune.png")
+pionjaune = pygame.image.load(os.path.join(IMAGE_DIRECTORY, "pion_jaune.png"))
 # charger l'image du pion rouge
-pionrouge = pygame.image.load("pion_rouge.png")
+pionrouge = pygame.image.load(os.path.join(IMAGE_DIRECTORY, "pion_rouge.png"))
 # Police pour le jeu
 font = pygame.font.Font("freesansbold.ttf", 15)
 #####################
@@ -67,8 +59,8 @@ def determiner_colonne_depuis_interface_graphique(x, y):
     col = x - 16
     col = col / 97
     if col in range(0, 7):
-        if (liste[5][int(col)] == 0):
-            liste_etat_du_jeu = False
+        if (gameBoard[5][int(col)] == 0):
+            gameBoard_etat_du_jeu = False
     return int(col)
 
 def placer_pion(colonne):
@@ -79,16 +71,16 @@ def placer_pion(colonne):
     stop=False
     while ligne>=0 and stop==False:
         # si j'ai une case vide pour la colonne concernee
-        if(liste[ligne][colonne]==0):
+        if(gameBoard[ligne][colonne]==0):
             if joueur == 1:
                 # je mets mon pion jaune
-                liste[ligne][colonne] = 1
+                gameBoard[ligne][colonne] = 1
                 # vu que je viens de placer mon pion, je ne vais pas en placer d'autres.
                 stop = True
             else:
-                liste[ligne][colonne] = -1
+                gameBoard[ligne][colonne] = -1
                 stop = True
-        # je remonte de bas en haut avec colonne fixee dans liste
+        # je remonte de bas en haut avec colonne fixee dans gameBoard
         ligne=ligne-1 # faire le parcours de bas en haut, parce que c'est plus performant (condition arret atteinte plus tot)
 
 def gagnant_horizontal():
@@ -106,13 +98,13 @@ def gagnant_horizontal():
         for colonne in range (4): # ca nous permet deplacer dans les colonnes
             # pourquoi 4 ? 4 possibilites de gagner dans une ligne
             # on determine le gagnant en fonction des valeurs definies dans les 4 colonnes (que l'on decale grace a la variable colonne) que l'on regarde pour la ligne donnee i
-            if liste[ligne][colonne] + liste[ligne][colonne+1] + liste[ligne][colonne+2] + liste[ligne][colonne+3] == 4 :#joueur jaune gagne
+            if gameBoard[ligne][colonne] + gameBoard[ligne][colonne+1] + gameBoard[ligne][colonne+2] + gameBoard[ligne][colonne+3] == 4 :#joueur jaune gagne
                 # on affecte le gagnant (car on a nom nombre de points)
                 gagnant="jaune"
                 print(gagnant)
                 # vu qu'on a gagne on arrete les parcours
                 stop=True
-            if liste[ligne][colonne] + liste[ligne][colonne+1] + liste[ligne][colonne+2] + liste[ligne][colonne+3] == -4 :#joueur rouge gagne
+            if gameBoard[ligne][colonne] + gameBoard[ligne][colonne+1] + gameBoard[ligne][colonne+2] + gameBoard[ligne][colonne+3] == -4 :#joueur rouge gagne
                 gagnant="rouge"
                 print(gagnant)
                 stop=True
@@ -130,9 +122,9 @@ def gagnant_vertical():
 		# 5 4 3 en baissant de -1 (3eme parametre du for)
 		# c'est plus concis que ce qu'on a au-dessous
 		for ligne in range(5, 2, -1):
-			if liste[ligne][colonne] + liste[ligne-1][colonne] + liste[ligne-2][colonne] + liste[ligne-3][colonne] ==4:
+			if gameBoard[ligne][colonne] + gameBoard[ligne-1][colonne] + gameBoard[ligne-2][colonne] + gameBoard[ligne-3][colonne] ==4:
 				gagnant= "jaune"
-			if liste[ligne][colonne] + liste[ligne-1][colonne] + liste[ligne-2][colonne] + liste[ligne-3][colonne] ==-4:
+			if gameBoard[ligne][colonne] + gameBoard[ligne-1][colonne] + gameBoard[ligne-2][colonne] + gameBoard[ligne-3][colonne] ==-4:
 				gagnant= "rouge"
 	return gagnant
 
@@ -144,18 +136,18 @@ def gagnant_diagonales():
 		# on avance dans les colonnes
 		for colonne in range (4):
 			# vu que c'est en meme on avance en diagonale
-			if liste[ligne][colonne] + liste[ligne+1][colonne+1] + liste[ligne+2][colonne+2] + liste[ligne+3][colonne+3] == 4:
+			if gameBoard[ligne][colonne] + gameBoard[ligne+1][colonne+1] + gameBoard[ligne+2][colonne+2] + gameBoard[ligne+3][colonne+3] == 4:
 				gagnant = "jaune"
-			if liste[ligne][colonne] + liste[ligne+1][colonne+1] + liste[ligne+2][colonne+2] + liste[ligne+3][colonne+3] == -4:
+			if gameBoard[ligne][colonne] + gameBoard[ligne+1][colonne+1] + gameBoard[ligne+2][colonne+2] + gameBoard[ligne+3][colonne+3] == -4:
 				gagnant = "rouge"
 	# on va diagonale d'en haut a droite vers en bas a gauche
 	for ligne in range (3):
 		# 0 1 2 3, la ligne a laquelle on commence
 		for colonne in range (3,7):
 			# 3 4 5 6, on commence a la colonne 3 pour aller vers la 6
-			if liste[ligne][colonne] + liste[ligne+1][colonne-1] + liste[ligne+2][colonne-2] + liste[ligne+3][colonne-3] == 4:
+			if gameBoard[ligne][colonne] + gameBoard[ligne+1][colonne-1] + gameBoard[ligne+2][colonne-2] + gameBoard[ligne+3][colonne-3] == 4:
 				gagnant = "jaune"
-			if liste[ligne][colonne] + liste[ligne+1][colonne-1] + liste[ligne+2][colonne-2] + liste[ligne+3][colonne-3] == -4:
+			if gameBoard[ligne][colonne] + gameBoard[ligne+1][colonne-1] + gameBoard[ligne+2][colonne-2] + gameBoard[ligne+3][colonne-3] == -4:
 				gagnant = "rouge"
 	return gagnant
 
@@ -173,7 +165,7 @@ def determiner_gagnant():
     if (joueur != ""):
         return joueur
 
-# inutile c'est pour liste_etat_du_jeuer
+# inutile c'est pour gameBoard_etat_du_jeuer
 def afficher_gagnant(joueur):
 	if joueur =="" or joueur is None:
 		return ("personne n'a gagne")
@@ -182,12 +174,12 @@ def afficher_gagnant(joueur):
 
 
 # Methode purement technique d'aide a la representation
-def inverser_liste(liste):
+def inverser_gameBoard(gameBoard):
     # par exemple la ligne d'en bas se retrouve en haut
-    reversed_liste = []
+    reversed_gameBoard = []
     for row in range(5,-1,-1):
-        reversed_liste.append(liste[row])
-    return reversed_liste
+        reversed_gameBoard.append(gameBoard[row])
+    return reversed_gameBoard
 
 def afficher():
     # On nettoye l'ecran de jeu
@@ -195,22 +187,22 @@ def afficher():
     # On remet l'image en commencant a la base de l'affichage
     screen.blit(image, (0, 0))
 
-    #on inverse la liste (backend) pour faciliter les traitements qui suivent
-    liste_etat_du_jeu = inverser_liste(liste)
+    #on inverse la gameBoard (backend) pour faciliter les traitements qui suivent
+    gameBoard_etat_du_jeu = inverser_gameBoard(gameBoard)
 
     # Affichage de debugging
-    print_liste(liste_etat_du_jeu)
+    display_board(gameBoard_etat_du_jeu)
 
     # parcours en ordre normal
-    for i in range(len(liste_etat_du_jeu)):
-        for j in range(len(liste_etat_du_jeu[i])):
+    for i in range(len(gameBoard_etat_du_jeu)):
+        for j in range(len(gameBoard_etat_du_jeu[i])):
             # cas du joueur jaune
-            if liste_etat_du_jeu[i][j] == 1:
+            if gameBoard_etat_du_jeu[i][j] == 1:
                 # on place une image d'un pion jaune sur l'écran en fonction de la colonne ou l'on se situe
                 screen.blit(pionjaune, (16 + 97 * j, 13 - 97.5 * i + 486))
             pygame.display.flip()
             # cas du joueur rouge
-            if liste_etat_du_jeu[i][j] == -1:
+            if gameBoard_etat_du_jeu[i][j] == -1:
                 # on place une image d'un pion rouge sur l'écran en fonction de la colonne ou l'on se situe
                 screen.blit(pionrouge, (16 + 97 * j, 13 - 97.5 * i + 486))
             pygame.display.flip()
@@ -221,7 +213,7 @@ while (gagnant_potentiel!="jaune" and gagnant_potentiel!="rouge" and JetonsJoues
     # Le joueur joue
     for event in pygame.event.get():
 
-        print_liste(liste)
+        display_board(gameBoard)
 
         if event.type == pygame.MOUSEBUTTONUP:
             x, y = pygame.mouse.get_pos()
