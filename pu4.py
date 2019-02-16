@@ -1,4 +1,10 @@
+
 # -*- coding: utf-8 -*-
+import time
+import pygame
+import sys
+
+
 def print_liste(liste):
     print("")
     print("")
@@ -9,6 +15,7 @@ def print_liste(liste):
     print("")
     print("")
 
+# initialiser le backend du jeu
 # Double liste symbolisant le plateau de jeu
 liste = [
 [0,0,0,0,0,0,0],
@@ -20,13 +27,32 @@ liste = [
 
 joueur = 1
 JetonsJoues = 0
-P4 = False
+gagnant_potentiel = False
 
+# initialiser l'interface
+# utiliser la librairie pygame
+pygame.init()
+# charger l'image du plateau de jeu
+image = pygame.image.load("plateau.png")
+# obtenir la taille du plateau de jeu
+taille_plateau_de_jeu = image.get_size()
+# stocker cette taille
+size = (taille_plateau_de_jeu[0] * 1, taille_plateau_de_jeu[1])
+# setter la taille de la fenetre jeu au meme dimension que celle du plateau de jeu (image)
+screen = pygame.display.set_mode(size)
+screen.blit(image, (0, 0))
+pygame.display.flip()
 
+# charger l'image du pion jaune
+pionjaune = pygame.image.load("pion_jaune.png")
+# charger l'image du pion rouge
+pionrouge = pygame.image.load("pion_rouge.png")
+# Police pour le jeu
+font = pygame.font.Font("freesansbold.ttf", 15)
 #####################
 # Fonctions
 
-def quel_joueur():
+def determiner_joueur():
     # Cette fonction retourne le numero du joueur qui doit jouer
     if (JetonsJoues % 2 == 0):
         jou = 1
@@ -34,15 +60,15 @@ def quel_joueur():
         jou = -1
     return jou
 
-
-def choisir_colonne(x, y):
+def determiner_colonne_depuis_interface_graphique(x, y):
     # Cette fonction retourne la colonne demandee au joueur1
     # Tant que la valeur n'est pas acceptable, on demande la colonne a jouer
+
     col = x - 16
     col = col / 97
     if col in range(0, 7):
         if (liste[5][int(col)] == 0):
-            test = False
+            liste_etat_du_jeu = False
     return int(col)
 
 def placer_pion(colonne):
@@ -64,8 +90,6 @@ def placer_pion(colonne):
                 stop = True
         # je remonte de bas en haut avec colonne fixee dans liste
         ligne=ligne-1 # faire le parcours de bas en haut, parce que c'est plus performant (condition arret atteinte plus tot)
-
-
 
 def gagnant_horizontal():
     # initialisation des variables
@@ -149,62 +173,50 @@ def determiner_gagnant():
     if (joueur != ""):
         return joueur
 
-# inutile c'est pour tester
+# inutile c'est pour liste_etat_du_jeuer
 def afficher_gagnant(joueur):
 	if joueur =="" or joueur is None:
 		return ("personne n'a gagne")
 	else:
 		return (joueur + " a gagne")
 
-# Affichage du resultat
-# j'affiche le retour de la methode afficger gagnant
-print(afficher_gagnant(determiner_gagnant()))
 
-
-# -*- coding: cp1252 -*-
-import pygame
-import sys
-
-pygame.init()
-image = pygame.image.load("plateau.png")
-sizeim = image.get_size()
-size = (sizeim[0] * 1, sizeim[1])
-screen = pygame.display.set_mode(size)
-screen.blit(image, (0, 0))
-pygame.display.flip()
-
-def extract_lines(liste):
+# Methode purement technique d'aide a la representation
+def inverser_liste(liste):
+    # par exemple la ligne d'en bas se retrouve en haut
     reversed_liste = []
     for row in range(5,-1,-1):
         reversed_liste.append(liste[row])
     return reversed_liste
 
-def affichage():
+def afficher():
+    # On nettoye l'ecran de jeu
     screen.fill((0, 0, 0))
+    # On remet l'image en commencant a la base de l'affichage
     screen.blit(image, (0, 0))
 
-    test = extract_lines(liste)
+    #on inverse la liste (backend) pour faciliter les traitements qui suivent
+    liste_etat_du_jeu = inverser_liste(liste)
 
-    print("DIPLAY")
-    print_liste(test)
+    # Affichage de debugging
+    print_liste(liste_etat_du_jeu)
 
-    for i in range(len(test)):
-        for j in range(len(test[i])):
-            if test[i][j] == 1:
+    # parcours en ordre normal
+    for i in range(len(liste_etat_du_jeu)):
+        for j in range(len(liste_etat_du_jeu[i])):
+            # cas du joueur jaune
+            if liste_etat_du_jeu[i][j] == 1:
+                # on place une image d'un pion jaune sur l'écran en fonction de la colonne ou l'on se situe
                 screen.blit(pionjaune, (16 + 97 * j, 13 - 97.5 * i + 486))
             pygame.display.flip()
-            if test[i][j] == -1:
+            # cas du joueur rouge
+            if liste_etat_du_jeu[i][j] == -1:
+                # on place une image d'un pion rouge sur l'écran en fonction de la colonne ou l'on se situe
                 screen.blit(pionrouge, (16 + 97 * j, 13 - 97.5 * i + 486))
             pygame.display.flip()
 
 
-pionjaune = pygame.image.load("pion_jaune.png")
-pionrouge = pygame.image.load("pion_rouge.png")
-font = pygame.font.Font("freesansbold.ttf", 15)
-
-import time
-
-while (P4!="jaune" and P4!="rouge" and JetonsJoues < 42):
+while (gagnant_potentiel!="jaune" and gagnant_potentiel!="rouge" and JetonsJoues < 42):
     time.sleep(0.1)
     # Le joueur joue
     for event in pygame.event.get():
@@ -213,13 +225,14 @@ while (P4!="jaune" and P4!="rouge" and JetonsJoues < 42):
 
         if event.type == pygame.MOUSEBUTTONUP:
             x, y = pygame.mouse.get_pos()
-            joueur = quel_joueur()
-            colonne = choisir_colonne(x, y)
+            joueur = determiner_joueur()
+            colonne = determiner_colonne_depuis_interface_graphique(x, y)
             # On modifie les variables pour tenir compte du jeton depose.
             placer_pion(colonne)
             JetonsJoues = JetonsJoues + 1
-            P4 = determiner_gagnant()
-            affichage()
+            gagnant_potentiel = determiner_gagnant()
+            print("GAGNANT ? : "+ str(gagnant_potentiel))
+            afficher()
             pygame.display.flip()
 
         if event.type == pygame.QUIT:
