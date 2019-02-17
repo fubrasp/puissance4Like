@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import os
+
 import pygame
+
 from GameBoard import *
 
 
