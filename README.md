@@ -33,7 +33,7 @@ See [STEPS.md](STEPS.md) for details.
 
 ### Youtube video (french language)
 
-[Youtube_video_link]()
+[Youtube_video_link](https://www.youtube.com/watch?v=AgO-6kGTWLs&t=117s)
 
 ## Versioning
 
