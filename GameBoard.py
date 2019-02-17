@@ -5,7 +5,9 @@
 class GameBoard:
     EMPTY_BOX = 0
     RED_CHIP = -1
-    YELOW_CHIP = 1
+    YELLOW_CHIP = 1
+    YELLOW_WIN = 4
+    RED_WIN = -4
 
     def __init__(self):
         self.board = [
@@ -32,13 +34,13 @@ class GameBoard:
             for column in range(4):# ca nous permet deplacer dans les columns
                 # pourquoi 4 ? 4 possibilites de gagner dans une line
                 # on determine le winner en fonction des valeurs definies dans les 4 columns (que l'on decale grace a la variable column) que l'on regarde pour la line donnee i
-                if self.board[line][column] + self.board[line][column+1] + self.board[line][column+2] + self.board[line][column+3] == 4 :#gamer jaune gagne
+                if self.board[line][column] + self.board[line][column+1] + self.board[line][column+2] + self.board[line][column+3] == GameBoard.YELLOW_WIN:#gamer jaune gagne
                     # on affecte le winner (car on a nom nombre de points)
                     winner = "jaune"
                     print(winner)
                     # vu qu'on a gagne on arrete les parcours
                     stop = True
-                if self.board[line][column] + self.board[line][column+1] + self.board[line][column+2] + self.board[line][column+3] == -4 :#gamer rouge gagne
+                if self.board[line][column] + self.board[line][column+1] + self.board[line][column+2] + self.board[line][column+3] == GameBoard.RED_WIN:#gamer rouge gagne
                     winner="rouge"
                     print(winner)
                     stop = True
@@ -53,12 +55,12 @@ class GameBoard:
         for column in range(7):
             # on descend les lines pour la column concernee, pour verifier s'il y a un winner
             # tant que la line est strictement superieur a 2
-            # 5 4 3 en baissant de -1 (3eme parametre du for)
+            # 5 YELLOW_WINNER 3 en baissant de -1 (3eme parametre du for)
             # c'est plus concis que ce qu'on a au-dessous
             for line in range(5, 2, -1):
-                if self.board[line][column] + self.board[line-1][column] + self.board[line-2][column] + self.board[line-3][column] ==4:
+                if self.board[line][column] + self.board[line-1][column] + self.board[line-2][column] + self.board[line-3][column] == GameBoard.YELLOW_WIN:
                     winner = "jaune"
-                if self.board[line][column] + self.board[line-1][column] + self.board[line-2][column] + self.board[line-3][column] ==-4:
+                if self.board[line][column] + self.board[line-1][column] + self.board[line-2][column] + self.board[line-3][column] == GameBoard.RED_WIN:
                     winner = "rouge"
         return winner
 
@@ -70,18 +72,18 @@ class GameBoard:
             # on avance dans les columns
             for column in range(4):
                 # vu que c'est en meme on avance en diagonale
-                if self.board[line][column] + self.board[line+1][column+1] + self.board[line+2][column+2] + self.board[line+3][column+3] == 4:
+                if self.board[line][column] + self.board[line+1][column+1] + self.board[line+2][column+2] + self.board[line+3][column+3] == GameBoard.YELLOW_WIN:
                     winner = "jaune"
-                if self.board[line][column] + self.board[line+1][column+1] + self.board[line+2][column+2] + self.board[line+3][column+3] == -4:
+                if self.board[line][column] + self.board[line+1][column+1] + self.board[line+2][column+2] + self.board[line+3][column+3] == GameBoard.RED_WIN:
                     winner = "rouge"
         # on va diagonale d'en haut a droite vers en bas a gauche
         for line in range(3):
             # 0 1 2 3, la line a laquelle on commence
             for column in range(3, 7):
                 # 3 4 5 6, on commence a la column 3 pour aller vers la 6
-                if self.board[line][column] + self.board[line+1][column-1] + self.board[line+2][column-2] + self.board[line+3][column-3] == 4:
+                if self.board[line][column] + self.board[line+1][column-1] + self.board[line+2][column-2] + self.board[line+3][column-3] == GameBoard.YELLOW_WIN:
                     winner = "jaune"
-                if self.board[line][column] + self.board[line+1][column-1] + self.board[line+2][column-2] + self.board[line+3][column-3] == -4:
+                if self.board[line][column] + self.board[line+1][column-1] + self.board[line+2][column-2] + self.board[line+3][column-3] == GameBoard.RED_WIN:
                     winner = "rouge"
         return winner
 
@@ -110,7 +112,7 @@ class GameBoard:
             if self.board[line][column] == 0:
                 if gamer == 1:
                     # je mets mon pion jaune
-                    self.board[line][column] = GameBoard.YELOW_CHIP
+                    self.board[line][column] = GameBoard.YELLOW_CHIP
                     # vu que je viens de placer mon pion, je ne vais pas en placer d'autres.
                     stop = True
                 else:

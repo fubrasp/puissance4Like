@@ -19,9 +19,20 @@ Install a venv if needed
     ./venv/bin/python3 main.py
 ``` 
 
+## Course
+
+### "Puissance 4" like game build process
+
+See [STEPS.md](STEPS.md) for details.
+
+### Youtube video (french language)
+
+[Youtube_video_link]()
+
 ## Versioning
 
-We use [git](https://git-scm.com/) for versioning. 
+I use [git](https://git-scm.com/) for versioning. 
+
 
 ## Author
 
