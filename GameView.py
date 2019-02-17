@@ -64,12 +64,12 @@ class GameView:
         for i in range(len(game_board_game_state)):
             for j in range(len(game_board_game_state[i])):
                 # cas du joueur jaune
-                if game_board_game_state[i][j] == 1:
+                if game_board_game_state[i][j] == GameBoard.YELLOW_CHIP:
                     # on place une image d'un pion jaune sur l'écran en fonction de la colonne ou l'on se situe
                     self.screen.blit(self.yellowChip, (16 + 97 * j, 13 - 97.5 * i + 486))
                 pygame.display.flip()
                 # cas du joueur rouge
-                if game_board_game_state[i][j] == -1:
+                if game_board_game_state[i][j] == GameBoard.RED_CHIP:
                     # on place une image d'un pion rouge sur l'écran en fonction de la colonne ou l'on se situe
                     self.screen.blit(self.redChip, (16 + 97 * j, 13 - 97.5 * i + 486))
                 pygame.display.flip()

@@ -36,7 +36,9 @@ I use [git](https://git-scm.com/) for versioning.
 
 ## Author
 
-* **Guillaume BERTRAND** - [fubrasp](https://github.com/fubrasp)
+* **Guillaume BERTRAND** - [fubrasp](https://github.com/fubrasp) : [blog](https://blog.bertrandguillaume.fr/), [freelance](https://services.bertrandguillaume.fr/), [cv](https://cv.bertrandguillaume.fr/), [projects](https://projets.bertrandguillaume.fr/) 
+
+contribute : [pay a coffee](https://blog.bertrandguillaume.fr/?asp-products=don)
 
 ## License
 

@@ -42,9 +42,9 @@ class Game:
                 if event.type == self.gameView.pyGame.MOUSEBUTTONUP:
                     x, y = self.gameView.pyGame.mouse.get_pos()
                     gamer = self.get_gamer()
-                    colonne = self.gameView.determine_column(x)
+                    column = self.gameView.determine_column(x)
                     # On modifie les variables pour tenir compte du jeton depose.
-                    self.gameView.gameBoard.put_chip(colonne, gamer)
+                    self.gameView.gameBoard.put_chip(column, gamer)
                     self.playedChips = self.playedChips + 1
                     self.potentialWinner = self.gameView.gameBoard.get_winner()
                     print("GAGNANT ? : " + str(self.potentialWinner))
