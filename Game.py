@@ -6,6 +6,8 @@ from GameView import *
 
 
 class Game:
+    NUMBER_OF_CHIPS = 42
+
     def __init__(self):
         self.gamer = 1
         self.playedChips = 0
@@ -27,8 +29,10 @@ class Game:
             return self.gamer + " a gagne"
 
     def start(self):
-        while self.potentialWinner != "jaune" and self.potentialWinner != "rouge" and self.playedChips < 42:
-            time.sleep(0.1)
+        while self.potentialWinner != "jaune" \
+                and self.potentialWinner != "rouge" \
+                and self.playedChips < Game.NUMBER_OF_CHIPS:
+            time.sleep(0.05)
             # Le joueur joue
             for event in self.gameView.pyGame.event.get():
 
