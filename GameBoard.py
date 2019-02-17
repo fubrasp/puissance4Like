@@ -3,6 +3,10 @@
 
 
 class GameBoard:
+    EMPTY_BOX = 0
+    RED_CHIP = -1
+    YELOW_CHIP = 1
+
     def __init__(self):
         self.board = [
             [0, 0, 0, 0, 0, 0, 0],
@@ -106,11 +110,11 @@ class GameBoard:
             if self.board[line][column] == 0:
                 if gamer == 1:
                     # je mets mon pion jaune
-                    self.board[line][column] = 1
+                    self.board[line][column] = GameBoard.YELOW_CHIP
                     # vu que je viens de placer mon pion, je ne vais pas en placer d'autres.
                     stop = True
                 else:
-                    self.board[line][column] = -1
+                    self.board[line][column] = GameBoard.RED_CHIP
                     stop = True
             # je remonte de bas en haut avec column fixee dans board
             line = line - 1  # faire le parcours de bas en haut, parce que c'est plus performant (condition arret atteinte plus tot)
