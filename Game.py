@@ -43,7 +43,7 @@ class Game:
                     gamer = self.get_gamer()
                     colonne = self.gameView.determine_column(x)
                     # On modifie les variables pour tenir compte du jeton depose.
-                    self.gameView.gameBoard.put_pawn(colonne, gamer)
+                    self.gameView.gameBoard.put_chip(colonne, gamer)
                     self.playedChips = self.playedChips + 1
                     self.potentialWinner = self.gameView.gameBoard.get_winner()
                     print("GAGNANT ? : " + str(self.potentialWinner))

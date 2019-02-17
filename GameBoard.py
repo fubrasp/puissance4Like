@@ -95,7 +95,7 @@ class GameBoard:
         if gamer != "":
             return gamer
 
-    def put_pawn(self, column, gamer):
+    def put_chip(self, column, gamer):
         # boucle sur les lines de bas en haut
         line = 5  # par le bas 5 4 3 2 1 0
         #  ATTENTION CECI est different de l'encodage des pions. peut on utiliser true or false
