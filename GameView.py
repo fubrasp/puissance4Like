@@ -20,14 +20,15 @@ class GameView:
         # utiliser la librairie pygame
         pygame.init()
         # charger l'image du plateau de jeu
-        self.image = pygame.image.load(os.path.join(GameView.IMAGE_DIRECTORY, "plateau.png"))
+        self.board_picture = pygame.image.load(os.path.join(GameView.IMAGE_DIRECTORY, "plateau.png"))
+
         # obtenir la taille du plateau de jeu
-        taille_plateau_de_jeu = self.image.get_size()
+        taille_plateau_de_jeu = self.board_picture.get_size()
         # stocker cette taille
         self.size = (taille_plateau_de_jeu[0] * 1, taille_plateau_de_jeu[1])
         # setter la taille de la fenetre jeu au meme dimension que celle du plateau de jeu (image)
         self.screen = pygame.display.set_mode(self.size)
-        self.screen.blit(self.image, (0, 0))
+        self.screen.blit(self.board_picture, (0, 0))
         pygame.display.flip()
 
         # charger l'image du pion jaune
@@ -52,7 +53,7 @@ class GameView:
         # On nettoye l'ecran de jeu
         self.screen.fill((0, 0, 0))
         # On remet l'image en commencant a la base de l'affichage
-        self.screen.blit(self.image, (0, 0))
+        self.screen.blit(self.board_picture, (0, 0))
 
         # on inverse la gameBoard (backend) pour faciliter les traitements qui suivent
         game_board_game_state = self.gameBoard.reverse_game_board()

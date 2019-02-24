@@ -117,7 +117,7 @@ class GameBoard:
         stop = False
         while line >= 0 and stop == False:
             # si j'ai une case vide pour la column concernee
-            if self.board[line][column] == 0:
+            if self.board[line][column] == GameBoard.EMPTY_BOX:
                 if gamer == GameBoard.YELLOW_CHIP:
                     # je mets mon pion jaune
                     self.board[line][column] = GameBoard.YELLOW_CHIP

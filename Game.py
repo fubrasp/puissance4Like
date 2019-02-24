@@ -18,9 +18,9 @@ class Game:
     def get_gamer(self):
         # Cette fonction retourne le numero du joueur qui doit jouer
         if self.playedChips % 2 == 0:
-            gamer_id = 1
+            gamer_id = GameBoard.YELLOW_CHIP
         else:
-            gamer_id = -1
+            gamer_id = GameBoard.RED_CHIP
         return gamer_id
 
     def display_winner(self):
